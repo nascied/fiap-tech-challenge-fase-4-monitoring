@@ -21,6 +21,8 @@ singleBinary:
   persistence:
     enabled: true
     size: 10Gi
+    # Cluster não tem StorageClass default (gp2 existe mas não está marcada como default)
+    storageClass: gp2
   resources:
     requests:
       cpu: 100m
@@ -31,6 +33,12 @@ singleBinary:
 
 # Sem object storage (S3/GCS) no ambiente AWS Academy: usa filesystem local via PVC
 minio:
+  enabled: false
+
+# Cache em memcached é otimização opcional; desligado por recurso limitado no cluster (AWS Academy)
+chunksCache:
+  enabled: false
+resultsCache:
   enabled: false
 
 # Sem gateway (nginx) na frente do Loki: Promtail, Grafana e o OTel Collector

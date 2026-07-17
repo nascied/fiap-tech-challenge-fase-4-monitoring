@@ -11,3 +11,10 @@ configMapGenerator:
       disableNameSuffixHash: true
       labels:
         grafana_dashboard: "1"
+  - name: toggle-master-infra-dashboard
+    files:
+      - toggle-master-infra.json
+    options:
+      disableNameSuffixHash: true
+      labels:
+        grafana_dashboard: "1"

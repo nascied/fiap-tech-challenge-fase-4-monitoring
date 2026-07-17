@@ -3,7 +3,7 @@
   "uid": "toggle-master-overview",
   "timezone": "browser",
   "schemaVersion": 39,
-  "version": 1,
+  "version": 2,
   "refresh": "30s",
   "time": { "from": "now-1h", "to": "now" },
   "tags": ["toggle-master", "fase4"],
@@ -91,30 +91,190 @@
         "overrides": []
       }
     },
+
+    { "id": 100, "type": "row", "title": "auth-service", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 22 } },
     {
-      "id": 7,
-      "type": "row",
-      "title": "Logs em Tempo Real",
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 22 }
+      "id": 101, "type": "stat", "title": "Status",
+      "gridPos": { "h": 8, "w": 4, "x": 0, "y": 23 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "kube_deployment_status_replicas_available{namespace=\"fiap-tc-f4\", deployment=\"auth-service\"}", "refId": "A" }],
+      "options": { "textMode": "value_and_name", "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] }, "mappings": [ { "type": "value", "options": { "0": { "text": "DOWN" } } }, { "type": "range", "options": { "from": 1, "to": 999, "result": { "text": "UP" } } } ] } }
     },
     {
-      "id": 8,
-      "type": "logs",
-      "title": "Logs dos microsserviços (Loki)",
-      "gridPos": { "h": 10, "w": 24, "x": 0, "y": 23 },
+      "id": 102, "type": "stat", "title": "Pods",
+      "gridPos": { "h": 8, "w": 4, "x": 4, "y": 23 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^auth-service-.*\"})", "refId": "A" }]
+    },
+    {
+      "id": 103, "type": "timeseries", "title": "CPU",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 23 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"fiap-tc-f4\", pod=~\"^auth-service-.*\", container!=\"\", container!=\"POD\"}[5m])) by (pod)", "legendFormat": "{{pod}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+    },
+    {
+      "id": 104, "type": "timeseries", "title": "Memória",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 23 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(container_memory_working_set_bytes{namespace=\"fiap-tc-f4\", pod=~\"^auth-service-.*\", container!=\"\", container!=\"POD\"}) by (pod)", "legendFormat": "{{pod}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+    },
+    {
+      "id": 105, "type": "logs", "title": "Logs (auth-service)",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 31 },
       "datasource": { "type": "loki", "uid": "loki" },
-      "options": {
-        "showTime": true,
-        "sortOrder": "Descending",
-        "wrapLogMessage": true
-      },
-      "targets": [
-        {
-          "datasource": { "type": "loki", "uid": "loki" },
-          "expr": "{namespace=\"fiap-tc-f4\"}",
-          "refId": "A"
-        }
-      ]
+      "options": { "showTime": true, "sortOrder": "Descending", "wrapLogMessage": true },
+      "targets": [{ "datasource": { "type": "loki", "uid": "loki" }, "expr": "{namespace=\"fiap-tc-f4\", app=\"auth-service\"}", "refId": "A" }]
+    },
+
+    { "id": 200, "type": "row", "title": "flag-service", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 39 } },
+    {
+      "id": 201, "type": "stat", "title": "Status",
+      "gridPos": { "h": 8, "w": 4, "x": 0, "y": 40 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "kube_deployment_status_replicas_available{namespace=\"fiap-tc-f4\", deployment=\"flag-service\"}", "refId": "A" }],
+      "options": { "textMode": "value_and_name", "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] }, "mappings": [ { "type": "value", "options": { "0": { "text": "DOWN" } } }, { "type": "range", "options": { "from": 1, "to": 999, "result": { "text": "UP" } } } ] } }
+    },
+    {
+      "id": 202, "type": "stat", "title": "Pods",
+      "gridPos": { "h": 8, "w": 4, "x": 4, "y": 40 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^flag-service-.*\"})", "refId": "A" }]
+    },
+    {
+      "id": 203, "type": "timeseries", "title": "CPU",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 40 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"fiap-tc-f4\", pod=~\"^flag-service-.*\", container!=\"\", container!=\"POD\"}[5m])) by (pod)", "legendFormat": "{{pod}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+    },
+    {
+      "id": 204, "type": "timeseries", "title": "Memória",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 40 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(container_memory_working_set_bytes{namespace=\"fiap-tc-f4\", pod=~\"^flag-service-.*\", container!=\"\", container!=\"POD\"}) by (pod)", "legendFormat": "{{pod}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+    },
+    {
+      "id": 205, "type": "logs", "title": "Logs (flag-service)",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 48 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "options": { "showTime": true, "sortOrder": "Descending", "wrapLogMessage": true },
+      "targets": [{ "datasource": { "type": "loki", "uid": "loki" }, "expr": "{namespace=\"fiap-tc-f4\", app=\"flag-service\"}", "refId": "A" }]
+    },
+
+    { "id": 300, "type": "row", "title": "targeting-service", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 56 } },
+    {
+      "id": 301, "type": "stat", "title": "Status",
+      "gridPos": { "h": 8, "w": 4, "x": 0, "y": 57 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "kube_deployment_status_replicas_available{namespace=\"fiap-tc-f4\", deployment=\"targeting-service\"}", "refId": "A" }],
+      "options": { "textMode": "value_and_name", "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] }, "mappings": [ { "type": "value", "options": { "0": { "text": "DOWN" } } }, { "type": "range", "options": { "from": 1, "to": 999, "result": { "text": "UP" } } } ] } }
+    },
+    {
+      "id": 302, "type": "stat", "title": "Pods",
+      "gridPos": { "h": 8, "w": 4, "x": 4, "y": 57 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^targeting-service-.*\"})", "refId": "A" }]
+    },
+    {
+      "id": 303, "type": "timeseries", "title": "CPU",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 57 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"fiap-tc-f4\", pod=~\"^targeting-service-.*\", container!=\"\", container!=\"POD\"}[5m])) by (pod)", "legendFormat": "{{pod}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+    },
+    {
+      "id": 304, "type": "timeseries", "title": "Memória",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 57 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(container_memory_working_set_bytes{namespace=\"fiap-tc-f4\", pod=~\"^targeting-service-.*\", container!=\"\", container!=\"POD\"}) by (pod)", "legendFormat": "{{pod}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+    },
+    {
+      "id": 305, "type": "logs", "title": "Logs (targeting-service)",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 65 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "options": { "showTime": true, "sortOrder": "Descending", "wrapLogMessage": true },
+      "targets": [{ "datasource": { "type": "loki", "uid": "loki" }, "expr": "{namespace=\"fiap-tc-f4\", app=\"targeting-service\"}", "refId": "A" }]
+    },
+
+    { "id": 400, "type": "row", "title": "evaluation-service", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 73 } },
+    {
+      "id": 401, "type": "stat", "title": "Status",
+      "gridPos": { "h": 8, "w": 4, "x": 0, "y": 74 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "kube_deployment_status_replicas_available{namespace=\"fiap-tc-f4\", deployment=\"evaluation-service\"}", "refId": "A" }],
+      "options": { "textMode": "value_and_name", "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] }, "mappings": [ { "type": "value", "options": { "0": { "text": "DOWN" } } }, { "type": "range", "options": { "from": 1, "to": 999, "result": { "text": "UP" } } } ] } }
+    },
+    {
+      "id": 402, "type": "stat", "title": "Pods",
+      "gridPos": { "h": 8, "w": 4, "x": 4, "y": 74 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^evaluation-service-.*\"})", "refId": "A" }]
+    },
+    {
+      "id": 403, "type": "timeseries", "title": "CPU",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 74 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"fiap-tc-f4\", pod=~\"^evaluation-service-.*\", container!=\"\", container!=\"POD\"}[5m])) by (pod)", "legendFormat": "{{pod}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+    },
+    {
+      "id": 404, "type": "timeseries", "title": "Memória",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 74 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(container_memory_working_set_bytes{namespace=\"fiap-tc-f4\", pod=~\"^evaluation-service-.*\", container!=\"\", container!=\"POD\"}) by (pod)", "legendFormat": "{{pod}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+    },
+    {
+      "id": 405, "type": "logs", "title": "Logs (evaluation-service)",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 82 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "options": { "showTime": true, "sortOrder": "Descending", "wrapLogMessage": true },
+      "targets": [{ "datasource": { "type": "loki", "uid": "loki" }, "expr": "{namespace=\"fiap-tc-f4\", app=\"evaluation-service\"}", "refId": "A" }]
+    },
+
+    { "id": 500, "type": "row", "title": "analytics-service", "gridPos": { "h": 1, "w": 24, "x": 0, "y": 90 } },
+    {
+      "id": 501, "type": "stat", "title": "Status",
+      "gridPos": { "h": 8, "w": 4, "x": 0, "y": 91 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "kube_deployment_status_replicas_available{namespace=\"fiap-tc-f4\", deployment=\"analytics-service\"}", "refId": "A" }],
+      "options": { "textMode": "value_and_name", "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "fieldConfig": { "defaults": { "thresholds": { "mode": "absolute", "steps": [ { "color": "red", "value": null }, { "color": "green", "value": 1 } ] }, "mappings": [ { "type": "value", "options": { "0": { "text": "DOWN" } } }, { "type": "range", "options": { "from": 1, "to": 999, "result": { "text": "UP" } } } ] } }
+    },
+    {
+      "id": 502, "type": "stat", "title": "Pods",
+      "gridPos": { "h": 8, "w": 4, "x": 4, "y": 91 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^analytics-service-.*\"})", "refId": "A" }]
+    },
+    {
+      "id": 503, "type": "timeseries", "title": "CPU",
+      "gridPos": { "h": 8, "w": 8, "x": 8, "y": 91 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(rate(container_cpu_usage_seconds_total{namespace=\"fiap-tc-f4\", pod=~\"^analytics-service-.*\", container!=\"\", container!=\"POD\"}[5m])) by (pod)", "legendFormat": "{{pod}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "short" }, "overrides": [] }
+    },
+    {
+      "id": 504, "type": "timeseries", "title": "Memória",
+      "gridPos": { "h": 8, "w": 8, "x": 16, "y": 91 },
+      "datasource": { "type": "prometheus", "uid": "prometheus" },
+      "targets": [{ "datasource": { "type": "prometheus", "uid": "prometheus" }, "expr": "sum(container_memory_working_set_bytes{namespace=\"fiap-tc-f4\", pod=~\"^analytics-service-.*\", container!=\"\", container!=\"POD\"}) by (pod)", "legendFormat": "{{pod}}", "refId": "A" }],
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] }
+    },
+    {
+      "id": 505, "type": "logs", "title": "Logs (analytics-service)",
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 99 },
+      "datasource": { "type": "loki", "uid": "loki" },
+      "options": { "showTime": true, "sortOrder": "Descending", "wrapLogMessage": true },
+      "targets": [{ "datasource": { "type": "loki", "uid": "loki" }, "expr": "{namespace=\"fiap-tc-f4\", app=\"analytics-service\"}", "refId": "A" }]
     }
   ]
 }

@@ -6,7 +6,7 @@
   "version": 3,
   "refresh": "30s",
   "time": {
-    "from": "now-1h",
+    "from": "now-24h",
     "to": "now"
   },
   "tags": [

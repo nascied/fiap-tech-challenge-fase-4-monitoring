@@ -109,7 +109,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\"})",
+          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\"} == 1)",
           "refId": "A"
         }
       ]
@@ -260,7 +260,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^auth-service-.*\"})",
+          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^auth-service-.*\"} == 1)",
           "refId": "A"
         }
       ]
@@ -494,7 +494,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^flag-service-.*\"})",
+          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^flag-service-.*\"} == 1)",
           "refId": "A"
         }
       ]
@@ -728,7 +728,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^targeting-service-.*\"})",
+          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^targeting-service-.*\"} == 1)",
           "refId": "A"
         }
       ]
@@ -962,7 +962,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^evaluation-service-.*\"})",
+          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^evaluation-service-.*\"} == 1)",
           "refId": "A"
         }
       ]
@@ -1196,7 +1196,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^analytics-service-.*\"})",
+          "expr": "count(kube_pod_status_phase{namespace=\"fiap-tc-f4\", phase=\"Running\", pod=~\"^analytics-service-.*\"} == 1)",
           "refId": "A"
         }
       ]

@@ -36,6 +36,15 @@ serviceMonitor:
   metricsEndpoints:
     - port: prometheus
 
+# DD_API_KEY vem de um Secret provisionado fora deste repositório (CI/CD),
+# não versionar a chave em texto plano.
+extraEnvs:
+  - name: DD_API_KEY
+    valueFrom:
+      secretKeyRef:
+        name: datadog-secret
+        key: apiKey
+
 config:
   receivers:
     jaeger: null
@@ -48,15 +57,20 @@ config:
     # Loki 3.x aceita logs via OTLP nativamente em /otlp/v1/logs
     otlphttp/loki:
       logs_endpoint: http://loki:3100/otlp/v1/logs
+    # APM (Requisito 3) — recebe apenas traces; métricas e logs seguem
+    # exclusivamente para Prometheus/Loki. Trocar "site" se a conta Datadog
+    # não for US1 (ex.: datadoghq.eu, us3.datadoghq.com).
+    datadog:
+      api:
+        key: ${env:DD_API_KEY}
+        site: datadoghq.com
 
   service:
     pipelines:
       traces:
         receivers: [otlp]
         processors: [memory_limiter, batch]
-        # Placeholder: o exporter da ferramenta de APM (Datadog/New Relic) entra aqui
-        # quando a instrumentação do código (Requisito 3) estiver pronta.
-        exporters: [debug]
+        exporters: [datadog, debug]
       metrics:
         receivers: [otlp]
         processors: [memory_limiter, batch]

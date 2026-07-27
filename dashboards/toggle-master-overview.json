@@ -145,7 +145,7 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_server_duration_milliseconds_count{namespace=\"fiap-tc-f4\"}[5m])) by (service_name)",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{namespace=\"fiap-tc-f4\"}[5m])) by (service_name)",
           "legendFormat": "{{service_name}}",
           "refId": "A"
         }
@@ -349,8 +349,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_server_duration_milliseconds_count{namespace=\"fiap-tc-f4\", service_name=\"auth-service\"}[5m])) by (http_status_code)",
-          "legendFormat": "{{http_status_code}}",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{namespace=\"fiap-tc-f4\", service_name=\"auth-service\"}[5m])) by (http_response_status_code)",
+          "legendFormat": "{{http_response_status_code}}",
           "refId": "A"
         }
       ],
@@ -583,8 +583,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_server_duration_milliseconds_count{namespace=\"fiap-tc-f4\", service_name=\"flag-service\"}[5m])) by (http_status_code)",
-          "legendFormat": "{{http_status_code}}",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{namespace=\"fiap-tc-f4\", service_name=\"flag-service\"}[5m])) by (http_response_status_code)",
+          "legendFormat": "{{http_response_status_code}}",
           "refId": "A"
         }
       ],
@@ -817,8 +817,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_server_duration_milliseconds_count{namespace=\"fiap-tc-f4\", service_name=\"targeting-service\"}[5m])) by (http_status_code)",
-          "legendFormat": "{{http_status_code}}",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{namespace=\"fiap-tc-f4\", service_name=\"targeting-service\"}[5m])) by (http_response_status_code)",
+          "legendFormat": "{{http_response_status_code}}",
           "refId": "A"
         }
       ],
@@ -1051,8 +1051,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_server_duration_milliseconds_count{namespace=\"fiap-tc-f4\", service_name=\"evaluation-service\"}[5m])) by (http_status_code)",
-          "legendFormat": "{{http_status_code}}",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{namespace=\"fiap-tc-f4\", service_name=\"evaluation-service\"}[5m])) by (http_response_status_code)",
+          "legendFormat": "{{http_response_status_code}}",
           "refId": "A"
         }
       ],
@@ -1285,8 +1285,8 @@
             "type": "prometheus",
             "uid": "prometheus"
           },
-          "expr": "sum(rate(http_server_duration_milliseconds_count{namespace=\"fiap-tc-f4\", service_name=\"analytics-service\"}[5m])) by (http_status_code)",
-          "legendFormat": "{{http_status_code}}",
+          "expr": "sum(rate(http_server_request_duration_seconds_count{namespace=\"fiap-tc-f4\", service_name=\"analytics-service\"}[5m])) by (http_response_status_code)",
+          "legendFormat": "{{http_response_status_code}}",
           "refId": "A"
         }
       ],

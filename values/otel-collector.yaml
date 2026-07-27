@@ -54,6 +54,13 @@ config:
     debug: {}
     prometheus:
       endpoint: ${env:MY_POD_IP}:8889
+      # Sem isso, "service.name" vira o label "job" (padrão do exporter Prometheus do
+      # OTel para compatibilidade), que colide com o job definido pelo ServiceMonitor
+      # e é renomeado para "exported_job" — os dashboards (que filtram por
+      # "service_name") ficam vazios. Isso expõe todos os atributos de resource
+      # (incluindo service.name) como labels normais, gerando "service_name".
+      resource_to_telemetry_conversion:
+        enabled: true
     # Loki 3.x aceita logs via OTLP nativamente em /otlp/v1/logs
     otlphttp/loki:
       logs_endpoint: http://loki:3100/otlp/v1/logs
